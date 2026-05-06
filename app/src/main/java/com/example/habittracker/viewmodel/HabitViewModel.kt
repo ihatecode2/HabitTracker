@@ -14,8 +14,4 @@ class HabitViewModel(application: Application) : AndroidViewModel(application) {
         list.add(habit)
         habitList.value = list
     }
-
-    fun refresh() {
-        habitList.value = habitList.value
-    }
 }
