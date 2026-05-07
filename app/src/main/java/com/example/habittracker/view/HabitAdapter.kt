@@ -44,12 +44,16 @@ class HabitAdapter(private val habitList: ArrayList<Habit>) :
             holder.txtStatus.text = "Completed"
             holder.txtStatus.setBackgroundResource(R.drawable.bg_badge_green)
 
+            holder.txtStatus.setTextColor(
+                ContextCompat.getColor(holder.itemView.context, android.R.color.white)
+            )
+
             holder.progressBar.progressTintList = ColorStateList.valueOf(
                 ContextCompat.getColor(holder.itemView.context, R.color.green_completed)
             )
 
             holder.imgCheck.visibility = View.VISIBLE
-
+            holder.btnPlus.isEnabled = false
         } else {
             holder.txtStatus.text = "In Progress"
             holder.txtStatus.setBackgroundResource(R.drawable.bg_badge_gray)
@@ -59,6 +63,7 @@ class HabitAdapter(private val habitList: ArrayList<Habit>) :
             )
 
             holder.imgCheck.visibility = View.GONE
+            holder.btnPlus.isEnabled =true
         }
 
         holder.btnPlus.setOnClickListener {
