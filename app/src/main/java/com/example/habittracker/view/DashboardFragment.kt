@@ -37,6 +37,11 @@ class DashboardFragment : Fragment() {
 
         viewModel.habitList.observe(viewLifecycleOwner) {
             adapter.updateData(it)
+            if (it.isEmpty()) {
+                binding.txtEmpty.visibility = View.VISIBLE
+            } else {
+                binding.txtEmpty.visibility = View.GONE
+            }
         }
 
         binding.fabAddHabit.setOnClickListener {
