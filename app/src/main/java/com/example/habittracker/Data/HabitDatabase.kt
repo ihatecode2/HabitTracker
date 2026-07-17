@@ -5,10 +5,12 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.habittracker.model.Habit
+import com.example.habittracker.model.User
 
 @Database(
     entities = [
-        Habit::class
+        Habit::class,
+        User::class
     ],
     version = 2,
     exportSchema = false
@@ -16,6 +18,8 @@ import com.example.habittracker.model.Habit
 abstract class HabitDatabase : RoomDatabase() {
 
     abstract fun habitDao(): HabitDao
+
+    abstract fun userDao(): UserDao
 
     companion object {
 
