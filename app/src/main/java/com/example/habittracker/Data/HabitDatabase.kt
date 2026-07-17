@@ -1,14 +1,17 @@
+package com.example.habittracker.Data
+
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.habittracker.Data.Habit
-import com.example.habittracker.Data.HabitDao
+import com.example.habittracker.model.Habit
 
 @Database(
-    entities = [Habit::class],
-    version = 1,
-    exportSchema = true
+    entities = [
+        Habit::class
+    ],
+    version = 2,
+    exportSchema = false
 )
 abstract class HabitDatabase : RoomDatabase() {
 
@@ -23,7 +26,6 @@ abstract class HabitDatabase : RoomDatabase() {
 
         fun getInstance(context: Context): HabitDatabase {
             return INSTANCE ?: synchronized(LOCK) {
-
                 INSTANCE ?: Room.databaseBuilder(
                     context.applicationContext,
                     HabitDatabase::class.java,
@@ -31,7 +33,9 @@ abstract class HabitDatabase : RoomDatabase() {
                 )
                     .fallbackToDestructiveMigration()
                     .build()
-                    .also { INSTANCE = it }
+                    .also {
+                        INSTANCE = it
+                    }
             }
         }
     }

@@ -1,29 +1,26 @@
 package com.example.habittracker.Data
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.example.habittracker.model.Habit
 
-/*
-*/
 @Dao
 interface HabitDao {
 
     @Query("SELECT * FROM habits")
-    suspend fun getAll(): List<Habit>
+    fun getAll(): List<Habit>
 
     @Query("SELECT * FROM habits WHERE id = :id")
-    suspend fun getById(id: Long): Habit?
+    fun getById(id: Int): Habit?
 
     @Insert
-    suspend fun insert(habit: Habit): Long
+    fun insert(habit: Habit)
 
     @Update
-    suspend fun update(habit: Habit): Int
+    fun update(habit: Habit)
 
-    @Delete
-    suspend fun delete(habit: Habit): Int
+    @Query(" UPDATE habits SET progress = :progress WHERE id = :id")
+    fun updateProgress(id: Int, progress: Int)
 }

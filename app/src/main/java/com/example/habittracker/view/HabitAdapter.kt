@@ -1,80 +1,101 @@
 package com.example.habittracker.adapter
 
 import android.content.res.ColorStateList
-import android.view.*
-import android.widget.*
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.habittracker.R
+import com.example.habittracker.databinding.HabitCardItemBinding
 import com.example.habittracker.model.Habit
+import com.example.habittracker.view.HabitCardListener
 
-class HabitAdapter(private val habitList: ArrayList<Habit>) :
-    RecyclerView.Adapter<HabitAdapter.ViewHolder>() {
+class HabitAdapter(
+    private val habitList: ArrayList<Habit>,
+    private val listener: HabitCardListener
+) : RecyclerView.Adapter<HabitAdapter.ViewHolder>() {
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val txtName: TextView = view.findViewById(R.id.txtHabitName)
-        val txtDesc: TextView = view.findViewById(R.id.txtHabitDesc)
-        val txtProgress: TextView = view.findViewById(R.id.txtProgressCount)
-        val progressBar: ProgressBar = view.findViewById(R.id.progressBar)
-        val txtStatus: TextView = view.findViewById(R.id.txtStatusBadge)
-        val btnPlus: Button = view.findViewById(R.id.btnIncrement)
-        val btnMinus: Button = view.findViewById(R.id.btnDecrement)
-        val imgIcon: ImageView = view.findViewById(R.id.imgHabitIcon)
-        val imgCheck: ImageView = view.findViewById(R.id.imgCompletedCheck)
+    class ViewHolder(
+        val binding: HabitCardItemBinding
+    ) : RecyclerView.ViewHolder(binding.root)
+
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): ViewHolder {
+
+        val binding = HabitCardItemBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+
+        return ViewHolder(binding)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.habit_card_item, parent, false)
-        return ViewHolder(view)
+    override fun getItemCount(): Int {
+        return habitList.size
     }
 
-    override fun getItemCount(): Int = habitList.size
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: ViewHolder,
+        position: Int
+    ) {
         val habit = habitList[position]
 
-        holder.txtName.text = habit.name
-        holder.txtDesc.text = habit.description
-        holder.txtProgress.text = habit.progressText
-        holder.progressBar.progress = habit.progressPercentage
-        holder.imgIcon.setImageResource(habit.icon)
+        holder.binding.habit = habit
+        holder.binding.listener = listener
+
+        holder.binding.imgHabitIcon.setImageResource(habit.icon)
 
         if (habit.isCompleted) {
-            holder.txtStatus.text = "Completed"
-            holder.txtStatus.setBackgroundResource(R.drawable.bg_badge_green)
-
-            holder.txtStatus.setTextColor(
-                ContextCompat.getColor(holder.itemView.context, android.R.color.white)
+            holder.binding.txtStatusBadge.setBackgroundResource(
+                R.drawable.bg_badge_green
             )
 
-            holder.progressBar.progressTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(holder.itemView.context, R.color.green_completed)
+            holder.binding.txtStatusBadge.setTextColor(
+                ContextCompat.getColor(
+                    holder.itemView.context,
+                    android.R.color.white
+                )
             )
 
-            holder.imgCheck.visibility = View.VISIBLE
-            holder.btnPlus.isEnabled = false
+            holder.binding.progressBar.progressTintList =
+                ColorStateList.valueOf(
+                    ContextCompat.getColor(
+                        holder.itemView.context,
+                        R.color.green_completed
+                    )
+                )
+
+            holder.binding.btnIncrement.isEnabled = false
         } else {
-            holder.txtStatus.text = "In Progress"
-            holder.txtStatus.setBackgroundResource(R.drawable.bg_badge_gray)
-
-            holder.progressBar.progressTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(holder.itemView.context, R.color.purple_primary)
+            holder.binding.txtStatusBadge.setBackgroundResource(
+                R.drawable.bg_badge_gray
             )
 
-            holder.imgCheck.visibility = View.GONE
-            holder.btnPlus.isEnabled =true
+            holder.binding.txtStatusBadge.setTextColor(
+                ContextCompat.getColor(
+                    holder.itemView.context,
+                    R.color.gray_text
+                )
+            )
+
+            holder.binding.progressBar.progressTintList =
+                ColorStateList.valueOf(
+                    ContextCompat.getColor(
+                        holder.itemView.context,
+                        R.color.purple_primary
+                    )
+                )
+
+            holder.binding.btnIncrement.isEnabled = true
         }
 
-        holder.btnPlus.setOnClickListener {
-            habit.increment()
-            notifyItemChanged(position)
-        }
+        holder.binding.btnDecrement.isEnabled =
+            habit.progress > 0
 
-        holder.btnMinus.setOnClickListener {
-            habit.decrement()
-            notifyItemChanged(position)
-        }
+        holder.binding.executePendingBindings()
     }
 
     fun updateData(newList: ArrayList<Habit>) {

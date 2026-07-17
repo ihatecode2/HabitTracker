@@ -70,7 +70,6 @@ class CreateHabitFragment : Fragment() {
             "Eat Meals",
             "Running",
             "Save Money",
-            "Save Money",
             "Daily Schedule",
             "Meditation",
             "Complete Tasks",
@@ -98,7 +97,13 @@ class CreateHabitFragment : Fragment() {
             val selectedIndex = binding.spinnerIcon.selectedItemPosition
             val icon = iconList[selectedIndex]
 
-            val habit = Habit(name, desc, goal, unit, icon)
+            val habit = Habit(
+                name = name,
+                description = desc,
+                goal = goal,
+                progress = 0,
+                unit = unit,
+                icon = icon)
 
             if (habit.isValid()) {
                 viewModel.addHabit(habit)
